@@ -6,6 +6,9 @@
 #include <vector>
 #include <queue>
 #include <functional>
+#include <Windows.h>
+#include <mmsystem.h>
+#pragma comment( lib , "winmm.lib" )
 
 using namespace std;
 #define lchild(dis) 2*dis+1
@@ -97,7 +100,7 @@ public:
 		return popdata;
 	}
 };
-
+/*
 int main() {
 	cin >> N;
 	heap newheap;
@@ -109,8 +112,29 @@ int main() {
 		scanf("%d", &tmp);
 		newheap.push(tmp);
 	}
+	int starttime = timeGetTime();
 	for (int i = 0; i < N; i++) {
 		printf("%d\n", newheap.pop());
 		
 	}
+	cout << timeGetTime() - starttime;
+}*/
+
+int main() {
+	cin >> N;
+	heap newheap;
+	int tmp;
+	for (int i = 0; i <= rchild(N); i++) {
+		sortarr[i] = INF;
+	}
+	for (int i = 0; i < N; i++) {
+		tmp = 100000 % (rand() + 1);
+		newheap.push(tmp);
+	}
+	int starttime = timeGetTime();
+	for (int i = 0; i < N; i++) {
+		printf("%d\n", newheap.pop());
+		
+	}
+	cout << timeGetTime() - starttime;
 }

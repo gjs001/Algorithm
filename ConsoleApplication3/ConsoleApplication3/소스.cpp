@@ -19,62 +19,16 @@ public:
 	void deleteAll();
 	void sizeincrease() { size++; }
 	void sizedecrease() { if(size>0) size--; }
+	
+	que();
+	~que();
+	bool Isempty();
+	void push(int v);
+	int pop();
+	int frontdata();
+	int backdata();
 
-
-	que() {
-		front = NULL;
-		rear = NULL;
-		size = 0;
-	}
-	~que() {
-		deleteAll();
-	}
-
-	bool Isempty() {
-		if (front == NULL)
-			return true;
-		else
-			return false;
-	}
-
-
-	void push(int v) {
-		node *add = new node;
-		add->data = v;
-		add->next = NULL;
-		if (Isempty())
-			front = add;
-		else
-			rear->next = add;
-
-		rear = add;
-		
-		sizeincrease();
-	}
-
-	int pop() {
-		if (Isempty()) return -1;
-		node* cur = front;
-		int d = cur->data;
-		front = front->next;
-
-		delete cur;
-		cur = NULL;
-		if (Isempty()) rear = NULL;
-		sizedecrease();
-		return d;
-
-	}
-	int frontdata() {
-		if (Isempty()) { return -1; }
-		else
-		return front->data;
-	}
-	int backdata() {
-		if (Isempty()) { return -1; }
-		else
-			return rear->data;
-	}
+	
 	
 };
 void que::deleteAll() {
@@ -90,6 +44,62 @@ void que::deleteAll() {
 		sizedecrease();
 	}
 }
+
+que::que() {
+	front = NULL;
+	rear = NULL;
+	size = 0;
+}
+que::~que() {
+	deleteAll();
+}
+
+bool que::Isempty() {
+	if (front == NULL)
+		return true;
+	else
+		return false;
+}
+void que::push(int v) {
+	node *add = new node;
+	add->data = v;
+	add->next = NULL;
+	if (Isempty())
+		front = add;
+	else
+		rear->next = add;
+
+	rear = add;
+
+	sizeincrease();
+}
+
+int que::pop() {
+	if (Isempty()) return -1;
+	node* cur = front;
+	int d = cur->data;
+	front = front->next;
+
+	delete cur;
+	cur = NULL;
+	if (Isempty()) rear = NULL;
+	sizedecrease();
+	return d;
+
+}
+int que::frontdata() {
+	if (Isempty()) { return -1; }
+	else
+		return front->data;
+}
+int que::backdata() {
+	if (Isempty()) { return -1; }
+	else
+		return rear->data;
+}
+
+
+
 
 
 int main() {

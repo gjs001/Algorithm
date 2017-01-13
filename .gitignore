@@ -45,3 +45,24 @@ $RECYCLE.BIN/
 Network Trash Folder
 Temporary Items
 .apdisk
+*.suo
+*.vcxproj
+*.log
+ConsoleApplication2/ConsoleApplication2/Debug/vc140.idb
+*.sln
+ConsoleApplication1/ConsoleApplication1/ConsoleApplication1.vcxproj.filters
+*.tlog
+*.obj
+ConsoleApplication1/Debug/ConsoleApplication1.exe
+*.db
+ConsoleApplication2/ConsoleApplication2/ConsoleApplication2.vcxproj.filters
+*.ilk
+ConsoleApplication2/Debug/ConsoleApplication2.pdb
+*.opendb
+ConsoleApplication3/ConsoleApplication3/ConsoleApplication3.vcxproj.filters
+*.pdb
+ConsoleApplication1/ConsoleApplication1/Debug/vc140.idb
+*.exe
+*.idb
+*.filters
+*.enc
