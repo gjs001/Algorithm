@@ -3,12 +3,12 @@
 
 #include <iostream>
 #include <string>
-#include <cstring>
+#include <cstring> 
 
 
 using namespace std;
 
-char sArr[102];
+char sArr[102]; 
 int main() {
 	
 
@@ -20,8 +20,8 @@ int main() {
 	int space = 0;
 	int len;
 
-	while(fgets(sArr, 102, stdin) != '\0') {
-
+	while(fgets(sArr, 102, stdin) != '\0') { // EOF가 들어왔을 때까지 입력받음
+		// 동일한 표현  >>>  if (feof(stdio)) break;
 		len = strlen(sArr);
 		for (int i = 0; i < len; i++) {
 			if ('a' <= sArr[i] && sArr[i] <= 'z') small++;

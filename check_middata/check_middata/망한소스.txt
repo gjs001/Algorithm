@@ -1,0 +1,316 @@
+#define lchild(dis) 2*dis+1
+#define rchild(dis) 2*dis+2
+#define parent(dis) (dis-1)/2
+using namespace std;
+int N;
+int K;
+int sArr[250001];
+int kArr[10001];
+long long ans;
+int wayflag[20000];
+typedef struct Node {
+	int data;
+	Node *parent;
+	Node *lchild;
+	Node *rchild;
+};
+class midTree {
+public:
+	Node* root;
+	int lsize;
+	int rsize;
+	int size;
+
+	midTree() {
+		lsize = 0; rsize = 0; size = 0; root = NULL;
+
+	}
+	void down_update(int value, Node *now) {
+
+			if (now->lchild == NULL) {
+				Node *newnode = new Node;
+				now->lchild = newnode;
+				newnode->parent = now;
+				newnode->data = value;
+				newnode->lchild = NULL;
+				newnode->rchild = NULL;
+			}
+			else if (now->rchild == NULL) {
+				Node *newnode = new Node;
+				now->rchild = newnode;
+				newnode->parent = now;
+				newnode->data = value;
+				newnode->lchild = NULL;
+				newnode->rchild = NULL;
+			}
+			else if (now->lchild->data <= now->rchild->data) {
+					down_update(now->lchild->data, now->lchild);
+					now->lchild->data = value;
+				}
+			else {
+					down_update(now->rchild->data, now->rchild);
+					now->rchild->data = value;
+				}
+
+
+	}
+	void up_update(Node *now, bool flag) {
+		if (now->lchild == NULL && now->rchild == NULL) {
+			if (now->parent->lchild != NULL && now->parent->lchild->data == now->data) now->parent->lchild = NULL;
+			else now->parent->rchild = NULL;
+			now->parent = NULL;
+			now->data = 0;
+			now = NULL;
+			delete now;
+			return;
+		}
+		else if (now->rchild == NULL) {
+			now->data = now->lchild->data;
+			up_update(now->lchild, flag);
+		}
+		else if (now->lchild == NULL) {
+			now->data = now->rchild->data;
+			up_update(now->rchild, flag);
+		}
+		else if ((now->lchild->data >= now->rchild->data && flag) || (now->lchild->data <= now->rchild->data && !flag)) {
+			now->data = now->lchild->data;
+			up_update(now->lchild, flag);
+		}
+		else {
+			now->data = now->rchild->data;
+			up_update(now->rchild, flag);
+		}
+	}
+
+	void search_add(int value, Node *now, bool flag,int n) {
+		if (now == NULL) {
+			Node *newnode = new Node;
+			now = newnode;
+			newnode->parent = root;
+			newnode->data = value;
+			newnode->lchild = NULL;
+			newnode->rchild = NULL;
+			if (flag) root->lchild = newnode;
+			else root->rchild = newnode;
+		}
+		else {
+			if (flag == true) {
+				if (now->data >= value) {
+					if (now->lchild == NULL) {
+						Node *newnode = new Node;
+						now->lchild = newnode;
+						newnode->parent = now;
+						newnode->data = value;
+						newnode->lchild = NULL;
+						newnode->rchild = NULL;
+
+					}
+					else if (now->rchild == NULL) {
+						Node *newnode = new Node;
+						now->rchild = newnode;
+						newnode->parent = now;
+						newnode->data = value;
+						newnode->lchild = NULL;
+						newnode->rchild = NULL;
+					}
+					else {
+						if (wayflag[n]) {
+							search_add(value, now->rchild, true, rchild(n)); wayflag[n] = 0;
+						}
+						else {
+							search_add(value, now->lchild, true, lchild(n)); wayflag[n] = 1;
+						}
+					}
+				}
+				else {
+					down_update(now->data, now);
+					now->data = value;
+				}
+			}
+			else {
+				if (now->data <= value) {
+					if (now->lchild == NULL) {
+						Node *newnode = new Node;
+						now->lchild = newnode;
+						newnode->parent = now;
+						newnode->data = value;
+						newnode->lchild = NULL;
+						newnode->rchild = NULL;
+					}
+					else if (now->rchild == NULL) {
+						Node *newnode = new Node;
+						now->rchild = newnode;
+						newnode->parent = now;
+						newnode->data = value;
+						newnode->lchild = NULL;
+						newnode->rchild = NULL;
+					}
+					else {
+						if (wayflag[n]) {
+							search_add(value, now->rchild, false, rchild(n)); wayflag[n] = 0;
+						}
+						else {
+							search_add(value, now->lchild, false, lchild(n)); wayflag[n] = 1;
+						}
+					}
+				}
+				else {
+					down_update(now->data, now);
+					now->data = value;
+				}
+			}
+		}
+	}
+
+	void push(int value) {
+		if (size == 0) {
+			Node *newnode = new Node;
+			root = newnode;
+			root->data = value;
+			root->lchild = NULL;
+			root->rchild = NULL;
+			root->parent = NULL;
+			size++;
+		}
+		else if (root->data >= value) {
+			search_add(value, root->lchild,1, 1);
+			lsize++;
+		}
+		else if (root->data < value) {
+			search_add(value, root->rchild,0, 2);
+			rsize++;
+		}
+		if (lsize - rsize >= 2) {
+			if (root->rchild == NULL) {
+				Node *newnode = new Node;
+				root->rchild = newnode;
+				newnode->parent = root;
+				newnode->data = root->data;
+				newnode->lchild = NULL;
+				newnode->rchild = NULL;
+			}
+			else {
+				down_update(root->rchild->data, root->rchild);
+				root->rchild->data = root->data;
+				rsize++;
+			}
+				root->data = root->lchild->data;
+				up_update(root->lchild, true);
+				lsize--;
+			
+
+		}
+		else if( rsize -lsize >= 2){
+			if (root->lchild == NULL) {
+				Node *newnode = new Node;
+				root->lchild = newnode;
+				newnode->parent = root;
+				newnode->data = root->data;
+				newnode->lchild = NULL;
+				newnode->rchild = NULL;
+			}
+			else {
+				down_update(root->lchild->data, root->lchild);
+				root->lchild->data = root->data;
+			}
+				lsize++;
+				root->data = root->rchild->data;
+				up_update(root->rchild, false);
+				rsize--;
+			
+		}
+
+	}
+	Node* e_search(Node *now, int value) {
+		if (now == NULL) return NULL;
+		else if (now->data == value) return now;
+		else if (now) {
+			Node*tmp;
+			tmp = e_search(now->lchild, value);
+			if (tmp != NULL) return tmp;
+			tmp = e_search(now->rchild, value);
+			return tmp;
+		}
+
+	}
+
+	void erase(int value){
+
+			if (root->data == value) {
+				root->data = root->rchild->data;
+				up_update(root->rchild, false);
+				rsize--;
+			}
+			else if (root->data > value) {
+				Node*tmp = e_search(root->lchild, value);
+				if (tmp == NULL) {
+					cout << "error";
+				}
+				up_update(tmp, true);
+				lsize--;
+			}
+			else {
+				Node*tmp = e_search(root->rchild, value);
+				up_update(tmp, false);
+				rsize--;
+			}
+	
+	}
+
+};
+
+
+void check_data() {
+	int count = N - K + 1;
+	midTree A;
+	for (int i = 0; i < K; i++) {
+		kArr[i] = sArr[i];
+	}
+	sort(kArr, kArr + K); //최대 5000*13
+
+	A.push(kArr[((K + 1) / 2) - 1]);
+	for (int i = 0; i < K; i++) {
+		if(i != ((K+1)/2)-1) A.push(kArr[i]);
+	}
+	Node *tmp;
+	tmp = A.e_search(A.root->lchild, 5868);
+	ans += A.root->data;
+
+	for (int i = 1; i < count; i++) { // 약 31 * count 최대 735만번
+		A.erase(sArr[i - 1]);
+		A.push(sArr[K + i - 1]);
+		ans += A.root->data;
+	/*	if (A.e_search(A.root->lchild, 5868) == NULL) {
+			//cout << "e1e";
+		}
+		if (A.e_search(A.root->rchild, 5868)) {
+			//cout << i << endl;
+		}
+		if (i == 1516) {
+			//cout << 3;
+		}*/
+	}
+
+}
+
+int main() {
+
+	cin >> N >> K;
+
+	for (int i = 0; i < N; i++) {
+		sArr[i] = 100000 % (rand()+1);
+	}
+	//for (int i = 0; i < N; i++) {
+	//scanf("%d", &sArr[i]);
+	//}
+	int starttime = timeGetTime();
+
+//	for (int i = 0; i < N; i++) {
+//		if (sArr[i] == 5868) cout << i << endl;
+//	}
+	check_data();
+	
+	printf("%lld\n", ans);
+	cout << timeGetTime() - starttime; //250ms정도 걸리는데~ 왜틀리지?
+	
+}

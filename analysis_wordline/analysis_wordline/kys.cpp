@@ -10,14 +10,14 @@
 
 using namespace std;
 
-typedef struct A{
+typedef struct A{ // 데이터형을 묶어서 sort를 편하게 하기위한 구조체 선언 
 	char name[11]; int kuk; int young; int su; // string을 사용하지 않고 char 배열을 사용했을 때 소요시간 감소 (108ms -> 64ms)
 }A;
 
 
 
 
-bool cmp(const A &C1, const A &C2) {
+bool cmp(const A &C1, const A &C2) { 
 	if (C1.kuk != C2.kuk) return (C1.kuk > C2.kuk);
 	if (C1.young != C2.young) return (C1.young < C2.young);
 	if (C1.su != C2.su) return (C1.su > C2.su);
@@ -44,10 +44,10 @@ int main() {
 
 
 
-	stable_sort(Clist, Clist+N, cmp);
+	stable_sort(Clist, Clist+N, cmp); //stable_sort는 여러번 sort함수를 사용할 경우 정렬 전 위치를 보장한다. 
 
 	for (int i = 0; i < N; i++) {
-		printf("%s\n", Clist[i].name);
+		printf("%s\n", Clist[i].name); 
 	}
 
 }
